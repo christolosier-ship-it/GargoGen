@@ -1,0 +1,11 @@
+:root{--bg:#efe2c6;--ink:#3f2f24;--stone:#8f8577;--green:#2f4f3a;--red:#8e3a3a}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:var(--bg);color:var(--ink)}
+header{padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap} img{width:40px;height:40px}
+main{padding:12px;display:grid;gap:12px} form{display:grid;gap:8px} label{display:grid;font-size:.9rem}
+button,select{padding:10px;border:1px solid var(--stone);background:#fff;border-radius:8px}
+#map{display:grid;gap:1px;background:var(--stone);padding:4px;overflow:auto;max-width:100%}
+.cell{aspect-ratio:1/1;min-width:22px;padding:0;font-weight:700}
+#floorNav,#editTools{display:flex;flex-wrap:wrap;gap:6px}.active{background:var(--green);color:#fff}
+#updateBanner{background:#fff3cd;padding:8px;border:1px solid #ccb676}
+@media (min-width:960px){main{grid-template-columns:320px 1fr}}
+@media print{#controls,#editTools,#generateBtn,#printBtn,#updateBanner{display:none!important} #map{page-break-inside:avoid} body{background:#fff;color:#000}}
