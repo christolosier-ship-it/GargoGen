@@ -1,18 +1,11 @@
-:root{--bg:#efe2c6;--ink:#3f2f24;--stone:#8f8577;--green:#2f4f3a;--red:#8e3a3a;--wall:#887d70;--floor:#f7efd8}
+:root{--bg:#efe2c6;--ink:#3f2f24;--stone:#8f8577;--green:#2f4f3a;--wall:#9b9388;--floor:#f8f1de;--card:#fffaf0;--cell-size:24px}
 *{box-sizing:border-box} body{margin:0;font-family:system-ui;background:var(--bg);color:var(--ink)}
-header{padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap} img{width:40px;height:40px}
-main{padding:12px;display:grid;gap:12px} form{display:grid;gap:8px} label{display:grid;font-size:.9rem}
-button,select{padding:10px;border:1px solid var(--stone);background:#fff;border-radius:8px}
-#map{display:grid;gap:1px;background:var(--stone);padding:4px;overflow:auto;max-width:100%}
-.cell{aspect-ratio:1/1;min-width:22px;padding:0;font-weight:700;border-radius:0;border:0;color:var(--ink)}
-.terrain-wall{background:var(--wall);color:transparent}
-.terrain-floor{background:var(--floor)}
-.terrain-door,.terrain-entrance,.terrain-exit,.terrain-stairsIn,.terrain-stairsOut{background:#fff}
-#floorNav,#editTools{display:flex;flex-wrap:wrap;gap:6px}.active{background:var(--green);color:#fff}
-#updateBanner{background:#fff3cd;padding:8px;border:1px solid #ccb676}
-.legend-item{display:inline-flex;align-items:center;gap:6px;margin-right:8px}
-.legend-wall{width:14px;height:14px;background:var(--wall);display:inline-block;border:1px solid #6f655a}
-@media (min-width:960px){main{grid-template-columns:320px 1fr}}
-@media print{#controls,#editTools,#generateBtn,#printBtn,#updateBanner{display:none!important} #map{page-break-inside:avoid} body{background:#fff;color:#000} .terrain-wall{background:#bbb!important}}
-
-#mainMenu{display:flex;gap:6px;padding:0 12px 12px;flex-wrap:wrap}.placeholder{padding:10px;border:1px dashed var(--stone);border-radius:8px;background:#fff}
+.app-shell{min-height:100dvh;display:flex;flex-direction:column}header{padding:10px 14px;display:flex;gap:12px;align-items:center;background:#f8efd8;border-bottom:1px solid #d6c5a5}img{width:40px;height:40px}
+#mainMenu{display:flex;gap:8px;padding:10px 14px;background:#f4e7cc;flex-wrap:wrap;border-bottom:1px solid #dbc9a6}
+main{padding:12px;display:block;flex:1;overflow:auto}.panel{background:var(--card);border:1px solid #d8c7a8;border-radius:12px;padding:12px}
+button,select{padding:9px;border:1px solid var(--stone);background:#fff;border-radius:8px}.active{background:var(--green);color:#fff}
+#page-dungeon{display:grid;gap:10px}.dungeon-layout{display:grid;gap:10px;grid-template-columns:1fr}.map-stage{width:100%;height:calc(100dvh - 210px);overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#eee1c5;border-radius:10px;padding:8px}
+#map{display:grid;gap:1px;background:var(--stone);padding:4px}.cell{width:var(--cell-size);height:var(--cell-size);padding:0;font-weight:700;border:0}.terrain-wall{background:var(--wall);color:transparent}.terrain-floor{background:var(--floor)}.terrain-door,.terrain-entrance,.terrain-exit,.terrain-stairsIn,.terrain-stairsOut{background:#fff}
+#floorNav,#editTools,.tool-buttons{display:flex;flex-wrap:wrap;gap:6px}.tool-group h4{margin:8px 0 6px}.side-panels{display:grid;gap:10px}.zoom-controls{display:flex;gap:6px;margin-bottom:8px}
+@media (min-width:960px){.dungeon-layout{grid-template-columns:minmax(0,1fr) 340px}}
+@media print{#mainMenu,#editTools,button,#updateBanner,.zoom-controls,#editFeedback{display:none!important}.map-stage{height:auto;overflow:visible}body{background:#fff}}
