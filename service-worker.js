@@ -1,4 +1,4 @@
-const APP_VERSION = '0.1.0';
+const APP_VERSION = '0.1.1';
 const CACHE_NAME = `gargogen-${APP_VERSION}`;
 const ASSETS = ['./','./index.html','./styles/main.css','./main.js','./manifest.json','./version.json'];
 self.addEventListener('install', (e)=>e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
