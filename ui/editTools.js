@@ -1,0 +1,2 @@
+export const TOOLS = ['wall','floor','door','entrance','exit','basic','tactical','special','brute','miniBoss','boss','interactiveObject','chest','trap','erase'];
+export function renderTools(container, selected, onPick){ container.innerHTML=''; TOOLS.forEach(t=>{const b=document.createElement('button'); b.textContent=t; b.className=t===selected?'active':''; b.onclick=()=>onPick(t); container.appendChild(b);}); }
