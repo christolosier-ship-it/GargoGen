@@ -3,5 +3,5 @@ export const TERRAIN = {
 };
 
 export const TERRAIN_SYMBOL = {
-  wall: '#', floor: '.', door: 'P', entrance: 'E', exit: 'S', stairsIn: 'S', stairsOut: 'S'
+  wall: '#', floor: '.', door: 'P', entrance: 'E', exit: 'S', stairsIn: '↑', stairsOut: '↓'
 };

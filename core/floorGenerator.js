@@ -3,23 +3,23 @@ import { generateRooms } from './roomGenerator.js';
 import { connectRooms } from './corridorGenerator.js';
 import { placeEntities, computeThreatStats } from './entityPlacer.js';
 import { validateFloor } from './validator.js';
-import { MAX_RETRIES, THREAT_BUDGETS } from '../data/generationRules.js';
+import { MAX_RETRIES, THREAT_BUDGETS, ROOM_COUNT_BY_SIZE } from '../data/generationRules.js';
 import { TERRAIN } from '../data/tileTypes.js';
+import { randInt } from '../utils/random.js';
 
 const extraTypes = ['piège', 'trésor', 'objet interactif', 'spéciale'];
 
-export function generateFloor({ index, role, size }) {
-  let roomsTarget = Math.max(3, Math.floor(size / 5));
+export function generateFloor({ index, role, size, sizeLabel, generationState }) {
+  const roomConfig = ROOM_COUNT_BY_SIZE[sizeLabel] || ROOM_COUNT_BY_SIZE.Moyen;
+  let roomsTarget = randInt(roomConfig.min, roomConfig.max);
+
   for (let tryNo = 0; tryNo < MAX_RETRIES; tryNo++) {
     const grid = createGrid(size, size);
     const rooms = generateRooms(grid, roomsTarget);
-    if (rooms.length < 3) {
-      roomsTarget = Math.max(3, roomsTarget - 1);
-      continue;
-    }
+    if (rooms.length < 3) continue;
 
     connectRooms(grid, rooms);
-    rooms[0].type = 'entrée';
+    rooms[0].type = index === 1 ? 'entrée' : 'combat';
     rooms[rooms.length - 1].type = index === 5 ? 'boss' : 'combat';
     if (rooms[1]) rooms[1].type = 'combat';
     if (rooms[2]) rooms[2].type = extraTypes[index % extraTypes.length];
@@ -30,33 +30,18 @@ export function generateFloor({ index, role, size }) {
     grid[cOut.y][cOut.x].terrain = index === 5 ? TERRAIN.EXIT : TERRAIN.STAIRS_OUT;
 
     const perRoomBudget = THREAT_BUDGETS[index - 1];
-    const floor = {
-      id: `floor-${index}`,
-      index,
-      role,
-      name: `Étage ${index}`,
-      width: size,
-      height: size,
-      grid,
-      rooms,
-      entities: [],
-      stats: {},
-      threatBudget: perRoomBudget
-    };
+    const floor = { id: `floor-${index}`, index, role, name: `Étage ${index}`, width: size, height: size, grid, rooms, entities: [], stats: {}, threatBudget: perRoomBudget };
 
-    floor.entities = placeEntities(floor, perRoomBudget);
+    floor.entities = placeEntities(floor, perRoomBudget, generationState);
     for (const e of floor.entities) {
       const cell = floor.grid[e.y]?.[e.x];
-      if (!cell || cell.terrain === 'wall' || cell.entityId) continue;
+      if (!cell || cell.terrain === TERRAIN.WALL || cell.entityId) continue;
       cell.entityId = e.id;
     }
 
-    if (validateFloor(floor)) {
-      floor.stats = computeThreatStats(floor);
-      return floor;
-    }
-
-    roomsTarget = Math.max(3, roomsTarget - 1);
+    const validation = validateFloor(floor);
+    floor.stats = { ...computeThreatStats(floor), isValid: validation.ok, issues: validation.issues };
+    if (validation.ok) return floor;
   }
   throw new Error(`Échec génération étage ${index}`);
 }
