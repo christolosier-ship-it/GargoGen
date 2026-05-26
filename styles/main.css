@@ -1,11 +1,11 @@
-:root{--bg:#efe2c6;--ink:#3f2f24;--stone:#8f8577;--green:#2f4f3a;--wall:#9b9388;--floor:#f8f1de;--card:#fffaf0;--cell-size:24px}
-*{box-sizing:border-box} body{margin:0;font-family:system-ui;background:var(--bg);color:var(--ink)}
-.app-shell{min-height:100dvh;display:flex;flex-direction:column}header{padding:10px 14px;display:flex;gap:12px;align-items:center;background:#f8efd8;border-bottom:1px solid #d6c5a5}img{width:40px;height:40px}
-#mainMenu{display:flex;gap:8px;padding:10px 14px;background:#f4e7cc;flex-wrap:wrap;border-bottom:1px solid #dbc9a6}
-main{padding:12px;display:block;flex:1;overflow:auto}.panel{background:var(--card);border:1px solid #d8c7a8;border-radius:12px;padding:12px}
-button,select{padding:9px;border:1px solid var(--stone);background:#fff;border-radius:8px}.active{background:var(--green);color:#fff}
-#page-dungeon{display:grid;gap:10px}.dungeon-layout{display:grid;gap:10px;grid-template-columns:1fr}.map-stage{width:100%;height:calc(100dvh - 210px);overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#eee1c5;border-radius:10px;padding:8px}
-#map{display:grid;gap:1px;background:var(--stone);padding:4px}.cell{width:var(--cell-size);height:var(--cell-size);padding:0;font-weight:700;border:0}.terrain-wall{background:var(--wall);color:transparent}.terrain-floor{background:var(--floor)}.terrain-door,.terrain-entrance,.terrain-exit,.terrain-stairsIn,.terrain-stairsOut{background:#fff}
-#floorNav,#editTools,.tool-buttons{display:flex;flex-wrap:wrap;gap:6px}.tool-group h4{margin:8px 0 6px}.side-panels{display:grid;gap:10px}.zoom-controls{display:flex;gap:6px;margin-bottom:8px}
-@media (min-width:960px){.dungeon-layout{grid-template-columns:minmax(0,1fr) 340px}}
-@media print{#mainMenu,#editTools,button,#updateBanner,.zoom-controls,#editFeedback{display:none!important}.map-stage{height:auto;overflow:visible}body{background:#fff}}
+:root{--bg:#130d09;--bg2:#1b120d;--panel:#241811;--panel2:#2c1d15;--line:#4d3727;--text:#f6e8d8;--muted:#c9aa8c;--accent:#e3b86d;--accent2:#f2d39c;--danger:#d46f6f;--ok:#8ad18c;--shadow:0 18px 36px rgba(0,0,0,.35);--radius:18px;--radius2:12px;--gap:16px;--max:1480px;--cell-size:24px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#2b1c13,#130d09);color:var(--text);font-family:Inter,system-ui}
+.shell{max-width:var(--max);margin:0 auto;padding:12px;min-height:100dvh}.topbar,.mainnav,.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px}.brand{display:flex;gap:10px;background:none;border:0;color:var(--text)}.brand img{width:44px;height:44px}.mainnav{display:flex;gap:8px;padding:8px;margin-top:10px;flex-wrap:wrap}
+.navbtn,.primary,.secondary,.ghost{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--text);background:#2a1b12}.primary{background:linear-gradient(180deg,var(--accent2),var(--accent));color:#2b1a10}.secondary{background:#3a271b}.ghost{background:transparent}.navbtn.active{outline:2px solid var(--accent)}
+.page{padding:12px 4px}.panel{padding:14px}.hero-card,.stats-row,.dungeon-grid-layout{display:grid;gap:var(--gap)}.stats-row{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}.stat-card{padding:10px;border:1px solid var(--line);border-radius:var(--radius2);background:#20140e}
+#page-dungeon .dungeon-grid-layout{grid-template-columns:90px 1fr 320px}.floor-rail{display:flex;flex-direction:column;gap:8px}.map-stage{overflow:auto;min-height:65dvh;background:#170f0b;border:1px solid var(--line);border-radius:var(--radius2);padding:8px}
+#map{display:grid;gap:1px;background:#5a4738;padding:4px;width:max-content;margin:auto}.cell{width:var(--cell-size);height:var(--cell-size);border:0;font-weight:700}
+.terrain-wall{background:#4f453b;color:transparent}.terrain-floor{background:#eadabd}.terrain-door{background:#9b6f3f}.terrain-entrance{background:#2d6a4f}.terrain-stairsIn,.terrain-stairsOut{background:#3e638a}.terrain-exit{background:#d5a648}
+.toast{padding:8px;border-radius:10px;background:#2f1f15;border:1px solid var(--line)}
+@media (max-width:1000px){#page-dungeon .dungeon-grid-layout{grid-template-columns:1fr}.floor-rail{flex-direction:row;overflow:auto}.dungeon-inspector{order:3}}

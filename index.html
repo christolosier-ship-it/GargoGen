@@ -1,17 +1,9 @@
-<!doctype html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GargoGen v0.3.1</title><link rel="manifest" href="./manifest.json"><link rel="stylesheet" href="./styles/main.css"></head><body>
-<div class="app-shell"><header><img src="./assets/logo.png" alt="logo"><div><h1>GargoGen</h1><div id="version">v0.3.1</div></div></header>
-<nav id="mainMenu"><button data-page="home" class="active">Accueil</button><button data-page="dungeon">Donjon</button><button data-page="about">À propos</button><button data-page="coming">À venir</button></nav>
-<div id="updateBanner" hidden>Mise à jour disponible. <button id="updateBtn">Mettre à jour</button></div>
-<main>
-<section id="page-home" class="panel"><form id="settingsForm"></form><div><button id="generateBtn">Générer</button> <button id="printBtn">Imprimer</button></div><p id="dungeonSummary"></p></section>
-<section id="page-dungeon" hidden>
-<div id="floorNav" class="panel"></div>
-<div class="dungeon-layout">
-<div class="map-stage" id="mapStage"><div id="map"></div></div>
-<aside class="side-panels">
-<div class="panel"><div class="zoom-controls"><button id="zoomOut">-</button><button id="zoomFit">Ajuster</button><button id="zoomIn">+</button></div><h3>Outils édition</h3><div id="editTools"></div><p id="editFeedback"></p></div>
-<div class="panel"><h3>Résumé étage</h3><p id="floorSummary"></p><ul id="issuesList"></ul></div>
-</aside></div></section>
-<section id="page-about" hidden class="panel"><p>GargoGen est un générateur tactique offline.</p><p>Version: <span id="versionAbout">v0.3.1</span>.</p></section>
+<!doctype html><html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GargoGen v0.3.2</title><link rel="manifest" href="./manifest.json"><link rel="stylesheet" href="./styles/main.css"></head><body>
+<div class="shell"><header class="topbar"><button class="brand"><img src="./assets/logo.png" alt="logo"><div><div class="brand-title">GargoGen V0.3.2</div><div class="brand-subtitle">générateur de donjons tactiques</div></div></button><div class="topbar-right"><span id="version">v0.3.2</span> <button id="updateBtn" class="ghost">Mettre à jour</button></div></header>
+<nav class="mainnav" id="mainMenu"><button class="navbtn active" data-page="home">Accueil</button><button class="navbtn" data-page="dungeon">Donjon</button><button class="navbtn" data-page="about">À propos</button><button class="navbtn" data-page="coming">À venir</button></nav>
+<main class="page">
+<section id="page-home"><section class="hero-card panel"><h1>GargoGen</h1><p>Générateur tactique local et offline.</p><button id="generateBtn" class="primary">Générer un donjon</button><button id="printBtn" class="secondary">Imprimer</button></section><section class="panel"><form id="settingsForm"></form></section><section class="panel"><p id="dungeonSummary"></p><div id="homeStats" class="stats-row"></div></section></section>
+<section id="page-dungeon" hidden><section class="panel dungeon-workbench"><div class="panel-title"><button id="zoomOut" class="ghost">-</button><button id="zoomFit" class="ghost">Ajuster</button><button id="zoomIn" class="ghost">+</button></div><div class="dungeon-grid-layout"><aside id="floorNav" class="floor-rail"></aside><div class="map-stage" id="mapStage"><div id="map"></div></div><aside class="dungeon-inspector panel"><div id="editTools"></div><p id="editFeedback" class="toast"></p><p id="floorSummary"></p><ul id="issuesList"></ul></aside></div></section></section>
+<section id="page-about" hidden class="panel"><p><strong id="versionAbout">v0.3.2</strong></p><p>GargoGen est un générateur tactique local et offline pour Gargotte & Va-Nu-Pieds. Cette bêta prépare une future interopérabilité avec Gargottex.</p></section>
 <section id="page-coming" hidden class="panel"><p>Zone future.</p></section>
 </main></div><script type="module" src="./main.js"></script></body></html>

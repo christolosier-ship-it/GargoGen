@@ -1,7 +1,7 @@
 import { createGrid } from '../utils/grid.js';
 import { generateRooms } from './roomGenerator.js';
 import { connectRooms } from './corridorGenerator.js';
-import { placeEntities, computeThreatStats } from './entityPlacer.js';
+import { placeEntities, recalculateThreats, rebuildEntityIndex } from './entityPlacer.js';
 import { validateFloor } from './validator.js';
 import { MAX_RETRIES, THREAT_BUDGETS, ROOM_COUNT_BY_SIZE } from '../data/generationRules.js';
 import { TERRAIN } from '../data/tileTypes.js';
@@ -9,16 +9,15 @@ import { randInt } from '../utils/random.js';
 
 const extraTypes = ['piège', 'trésor', 'objet interactif', 'spéciale'];
 
-export function generateFloor({ index, role, size, sizeLabel, generationState }) {
+export function generateFloor({ index, role, size, sizeLabel, generationState, settings, dungeonFloors = [] }) {
   const roomConfig = ROOM_COUNT_BY_SIZE[sizeLabel] || ROOM_COUNT_BY_SIZE.Moyen;
   let roomsTarget = randInt(roomConfig.min, roomConfig.max);
 
   for (let tryNo = 0; tryNo < MAX_RETRIES; tryNo++) {
     const grid = createGrid(size, size);
-    const rooms = generateRooms(grid, roomsTarget);
+    const rooms = generateRooms(grid, roomsTarget, settings?.structure);
     if (rooms.length < 3) continue;
-
-    connectRooms(grid, rooms);
+    connectRooms(grid, rooms, settings?.structure);
     rooms[0].type = index === 1 ? 'entrée' : 'combat';
     rooms[rooms.length - 1].type = index === 5 ? 'boss' : 'combat';
     if (rooms[1]) rooms[1].type = 'combat';
@@ -32,17 +31,19 @@ export function generateFloor({ index, role, size, sizeLabel, generationState })
     const perRoomBudget = THREAT_BUDGETS[index - 1];
     const floor = { id: `floor-${index}`, index, role, name: `Étage ${index}`, width: size, height: size, grid, rooms, entities: [], stats: {}, threatBudget: perRoomBudget };
 
-    floor.entities = placeEntities(floor, perRoomBudget, generationState);
-    for (const e of floor.entities) {
-      const cell = floor.grid[e.y]?.[e.x];
-      if (!cell || cell.terrain === TERRAIN.WALL || cell.entityId) continue;
-      cell.entityId = e.id;
-    }
-
-    floor.stats = { ...computeThreatStats(floor) };
-    const validation = validateFloor(floor);
+    const tempState = { ...generationState };
+    placeEntities(floor, perRoomBudget, { dungeonFloors: [...dungeonFloors, floor], settings });
+    rebuildEntityIndex(floor);
+    recalculateThreats(floor);
+    const validation = validateFloor(floor, [...dungeonFloors, floor]);
     floor.stats = { ...floor.stats, isValid: validation.ok, issues: validation.issues };
-    if (validation.ok) return floor;
+    if (validation.ok) {
+      tempState.bossPlaced = tempState.bossPlaced || floor.entities.some((e) => e.type === 'boss');
+      tempState.miniBossPlaced = tempState.miniBossPlaced || floor.entities.some((e) => e.type === 'miniBoss');
+      generationState.bossPlaced = tempState.bossPlaced;
+      generationState.miniBossPlaced = tempState.miniBossPlaced;
+      return floor;
+    }
   }
   throw new Error(`Échec génération étage ${index}`);
 }

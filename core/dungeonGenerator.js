@@ -8,7 +8,10 @@ export function generateDungeon(settings, appVersion) {
   const sizeLabel = settings.size in GRID_SIZES ? settings.size : 'Moyen';
   const size = GRID_SIZES[sizeLabel];
   const generationState = { miniBossPlaced: false, bossPlaced: false };
-  const floors = BASTOGNAC.floorRoles.map((role, i) => generateFloor({ index: i + 1, role, size, sizeLabel, generationState }));
+  const floors = [];
+  for (const [i, role] of BASTOGNAC.floorRoles.entries()) {
+    floors.push(generateFloor({ index: i + 1, role, size, sizeLabel, generationState, settings, dungeonFloors: floors }));
+  }
   return {
     id: uid('run'),
     appVersion,
