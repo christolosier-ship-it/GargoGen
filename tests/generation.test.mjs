@@ -10,7 +10,7 @@ const creatureTypes = new Set(['basic', 'tactical', 'special', 'brute', 'miniBos
 
 for (let i = 0; i < 300; i++) {
   const settings = { size: sizes[i % 3], difficulty: difficulties[i % 4], heroCount: heroes[i % 4], structure: ['Linéaire', 'Labyrinthe', 'Hub central', 'Arène'][i % 4], dungeonName: 'Le Château de Bastognac' };
-  const dungeon = generateDungeon(settings, '0.3.3');
+  const dungeon = generateDungeon(settings, '0.3.4');
   const all = dungeon.floors.flatMap((f) => f.entities.map((e) => ({ ...e, floor: f.index })));
   const bosses = all.filter((e) => e.type === 'boss');
   assert.equal(bosses.length, 1, `Boss count invalid run ${i}`);
@@ -22,17 +22,13 @@ for (let i = 0; i < 300; i++) {
   for (const floor of dungeon.floors) {
     const v = validateFloor(floor, dungeon.floors);
     assert.ok(v.ok, `Validation failed run ${i}, floor ${floor.index}: ${v.issues.join(',')}`);
-    const usedRatios = [];
     for (const room of floor.rooms) {
       assert.ok((room.threatUsed ?? 0) <= (room.threatBudget ?? floor.threatBudget), `Budget exceeded run ${i}, floor ${floor.index}, room ${room.id}`);
       const creatures = floor.entities.filter((e) => creatureTypes.has(e.type) && e.roomId === room.id);
-      if ((room.placementType === 'combat' || room.placementType === 'hardCombat') && room.placementType !== 'safe') {
-        assert.ok(creatures.length > 0, `Combat room empty run ${i}, floor ${floor.index}, room ${room.id} (${room.placementType})`);
-      }
+      if (room.placementType !== 'safe') assert.ok(creatures.length > 0, `Non-entry room empty run ${i}, floor ${floor.index}, room ${room.id} (${room.placementType})`);
       if (room.placementType === 'safe') assert.equal(creatures.length, 0, `Safe room has creatures run ${i}, floor ${floor.index}, room ${room.id}`);
-      if (room.threatBudget) usedRatios.push((room.threatUsed ?? 0) / room.threatBudget);
+      if (room.placementType !== 'safe') assert.equal((room.threatUsed ?? 0), (room.threatBudget ?? floor.threatBudget), `Threat must equal budget run ${i}, floor ${floor.index}, room ${room.id}`);
     }
-    assert.ok(usedRatios.some((r) => r < 1), `All rooms full at 100% run ${i}, floor ${floor.index}`);
     if (floor.index === 5) {
       const bossRoom = floor.rooms.find((r) => r.placementType === 'boss');
       assert.ok(bossRoom, `Missing boss room run ${i}`);

@@ -1,7 +1,7 @@
 import { randInt } from '../utils/random.js';
 import { TERRAIN } from '../data/tileTypes.js';
 
-const MIN_ROOM_SIZE = 4;
+const MIN_ROOM_SIZE = 5;
 const MAX_ROOM_SIZE = 8;
 
 export function generateRooms(grid, targetRooms) {

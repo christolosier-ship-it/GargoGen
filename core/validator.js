@@ -20,7 +20,10 @@ export function validateFloor(floor, dungeonFloors = [floor]) {
   const computed = recalculateThreats(floor);
   for (const room of floor.rooms) {
     const expected = computed.threatByRoom[room.id] ?? 0;
-    if (expected > (room.threatBudget ?? floor.threatBudget ?? 0)) issues.push('room-threat-over-budget');
+    const budget = room.threatBudget ?? floor.threatBudget ?? 0;
+    if (expected > budget) issues.push('room-threat-over-budget');
+    if (room.placementType !== 'safe' && expected < budget) issues.push('room-threat-under-budget');
+    if (room.placementType !== 'safe' && expected !== budget) issues.push('room-threat-not-equal-budget');
   }
 
   const allEntities = dungeonFloors.flatMap((f) => f.entities || []);
@@ -44,7 +47,7 @@ export function validateFloor(floor, dungeonFloors = [floor]) {
     const pType = room.placementType;
     const creatureCount = floor.entities.filter((e) => CREATURE_TYPES.has(e.type) && e.roomId === room.id).length;
     if (pType === 'safe' && creatureCount > 0) issues.push('safe-room-has-creature');
-    if (['combat','hardCombat','boss'].includes(pType) && creatureCount === 0) issues.push('combat-room-empty');
+    if (pType !== 'safe' && creatureCount === 0) issues.push('combat-room-empty');
   }
   for (const boss of floor.entities.filter((e) => e.type === 'boss')) if (!seen.has(`${boss.x},${boss.y}`)) issues.push('boss-unreachable');
 
