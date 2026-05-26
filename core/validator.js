@@ -2,6 +2,7 @@ import { cardinals, inBounds } from '../utils/grid.js';
 import { recalculateThreats, rebuildEntityIndex } from './entityPlacer.js';
 
 const BLOCKED_TERRAINS = new Set(['wall','door','entrance','exit','stairsIn','stairsOut']);
+const CREATURE_TYPES = new Set(['basic','tactical','special','brute','miniBoss','boss']);
 
 export function validateFloor(floor, dungeonFloors = [floor]) {
   const issues = [];
@@ -38,6 +39,13 @@ export function validateFloor(floor, dungeonFloors = [floor]) {
     if (e.type === 'miniBoss' && floor.index !== 4) issues.push('mini-boss-wrong-floor');
   }
 
+
+  for (const room of floor.rooms) {
+    const pType = room.placementType;
+    const creatureCount = floor.entities.filter((e) => CREATURE_TYPES.has(e.type) && e.roomId === room.id).length;
+    if (pType === 'safe' && creatureCount > 0) issues.push('safe-room-has-creature');
+    if (['combat','hardCombat','boss'].includes(pType) && creatureCount === 0) issues.push('combat-room-empty');
+  }
   for (const boss of floor.entities.filter((e) => e.type === 'boss')) if (!seen.has(`${boss.x},${boss.y}`)) issues.push('boss-unreachable');
 
   return { ok: issues.length === 0, issues: [...new Set(issues)] };

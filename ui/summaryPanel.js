@@ -15,7 +15,7 @@ const ISSUE_MESSAGES = {
 export function updateSummary(floorEl, dungeonEl, issuesEl, floor, dungeon) {
   const byType = countByType(floor.entities);
   const overBudget = floor.rooms.filter((r) => (r.threatUsed ?? 0) > (r.threatBudget ?? floor.threatBudget)).length;
-  floorEl.textContent = `Étage ${floor.index} • ${floor.stats?.isValid ? 'Étage valide' : 'Étage invalide'} • Boss: ${byType.boss ? 'présent' : 'absent'} • Mini Boss: ${byType.miniBoss ? 'présent' : 'absent'} • Salles hors budget: ${overBudget} • Menace/salle: ${floor.rooms.map((r) => `${r.id} ${r.threatUsed ?? 0}/${r.threatBudget ?? floor.threatBudget}`).join(' | ')}`;
+  floorEl.textContent = `Étage ${floor.index} • ${floor.stats?.isValid ? 'Étage valide' : 'Étage invalide'} • Boss: ${byType.boss ? 'présent' : 'absent'} • Mini Boss: ${byType.miniBoss ? 'présent' : 'absent'} • Salles hors budget: ${overBudget} • Menace/salle: ${floor.rooms.map((r) => `${r.id} | ${r.placementType || r.type || 'n/a'} | ${r.threatUsed ?? 0}/${r.threatBudget ?? floor.threatBudget} | ${floor.entities.filter((e)=>e.roomId===r.id && ['basic','tactical','special','brute','miniBoss','boss'].includes(e.type)).length} créatures`).join(' | ')}`;
   dungeonEl.textContent = `Donjon ${dungeon.dungeonName} • Étages: ${dungeon.floorCount} • Menace totale: ${dungeon.globalStats.totalThreat}`;
   issuesEl.innerHTML = (floor.stats?.issues || []).map((i) => `<li>${ISSUE_MESSAGES[i] || i}</li>`).join('') || '<li>Aucun problème détecté.</li>';
 }
