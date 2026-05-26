@@ -29,6 +29,7 @@ export function validateFloor(floor) {
   if (floor.index === 5) mustReach.push(findCell(floor, 'exit'));
   for (const c of mustReach.filter(Boolean)) if (!seen.has(`${c.x},${c.y}`)) issues.push('special-unreachable');
 
+  const entityAt = new Set();
   const bosses = floor.entities.filter((e) => e.type === 'boss');
   const miniBosses = floor.entities.filter((e) => e.type === 'miniBoss');
   if (bosses.length > 1) issues.push('too-many-boss');
@@ -39,19 +40,18 @@ export function validateFloor(floor) {
 
   for (const e of floor.entities) {
     const cell = floor.grid[e.y]?.[e.x];
+    const pos = `${e.x},${e.y}`;
+    if (entityAt.has(pos)) issues.push('entity-overlap');
+    entityAt.add(pos);
     if (!cell) { issues.push('entity-outside-grid'); continue; }
     if (cell.terrain === 'wall') issues.push('entity-on-wall');
     if (['door', 'stairsIn', 'stairsOut', 'entrance', 'exit'].includes(cell.terrain)) issues.push('entity-on-special');
-    if (floor.index === 5 && e.type === 'boss' && !seen.has(`${e.x},${e.y}`)) issues.push('boss-unreachable');
   }
 
   for (const room of floor.rooms) {
     const rx = room.x + 1, ry = room.y + 1;
     if (!seen.has(`${rx},${ry}`)) issues.push('room-unreachable');
-  }
-
-  if (floor.stats?.threatByRoom) {
-    for (const [_, threat] of Object.entries(floor.stats.threatByRoom)) if (threat > floor.threatBudget) issues.push('room-threat-over-budget');
+    if ((room.threatUsed ?? 0) > (room.threatBudget ?? floor.threatBudget ?? 0)) issues.push('room-threat-over-budget');
   }
 
   return { ok: issues.length === 0, issues: [...new Set(issues)] };

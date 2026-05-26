@@ -39,8 +39,9 @@ export function generateFloor({ index, role, size, sizeLabel, generationState })
       cell.entityId = e.id;
     }
 
+    floor.stats = { ...computeThreatStats(floor) };
     const validation = validateFloor(floor);
-    floor.stats = { ...computeThreatStats(floor), isValid: validation.ok, issues: validation.issues };
+    floor.stats = { ...floor.stats, isValid: validation.ok, issues: validation.issues };
     if (validation.ok) return floor;
   }
   throw new Error(`Échec génération étage ${index}`);

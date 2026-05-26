@@ -14,3 +14,5 @@ button,select{padding:10px;border:1px solid var(--stone);background:#fff;border-
 .legend-wall{width:14px;height:14px;background:var(--wall);display:inline-block;border:1px solid #6f655a}
 @media (min-width:960px){main{grid-template-columns:320px 1fr}}
 @media print{#controls,#editTools,#generateBtn,#printBtn,#updateBanner{display:none!important} #map{page-break-inside:avoid} body{background:#fff;color:#000} .terrain-wall{background:#bbb!important}}
+
+#mainMenu{display:flex;gap:6px;padding:0 12px 12px;flex-wrap:wrap}.placeholder{padding:10px;border:1px dashed var(--stone);border-radius:8px;background:#fff}
